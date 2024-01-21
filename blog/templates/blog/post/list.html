@@ -1,50 +1,76 @@
 {% extends "blog/base.html" %}
+{% load static %}
 
 {% block title %} My blog {% endblock title %}
 
 {% block content %}
-    <h1> My blog </h1>
-    <div class="container p-0 main-content">
-        {% for post in posts %}
-        <div class="card my-2">
-            <div class="row g-0">
-                <div class="col-md-4">
-                    <svg class="bd-placeholder-img img-fluid rounded-start" width="100%" height="200"
-                        xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Image"
-                        preserveAspectRatio="xMidYMid slice" focusable="false">
-                        <title>Placeholder</title>
-                        <rect width="100%" height="100%" fill="#868e96"></rect><text x="50%" y="50%" fill="#dee2e6"
-                            dy=".3em" dx="-1em">Image</text>
-                    </svg>
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <a class="link-underline-light" href="{{ post.get_absolute_url }}">
-                                {{ post.title }}
-                            </a>
+<div class="row">
 
-                            {% with post.tags.all as all_tags %}
+    <aside class="col-md-4">
+        <div class="p-3 mb-3 bg-light rounded">
+            <div class="text-center">
+                <img src="{% static 'images/profile.png' %}" alt="Profile Image" class="img-fluid rounded-circle mb-3"
+                    style="width: 150px; height: 150px;">
+                <h2>Person Name</h2>
+                <p>{% lorem %}</p>
+                <a href="" class="text-dark me-2" target="_blank"
+                    rel="noopener noreferrer">
+                    <i class="fa-brands fa-linkedin" style="font-size: 24px;"></i>
+                </a>
+                <a href="" class="text-dark me-2" target="_blank"
+                    rel="noopener noreferrer">
+                    <i class="fa-brands fa-github" style="font-size: 24px;"></i>
+                </a>
+            </div>
+        </div>
+    </aside>
+    <div class="col">
+
+        <h1> My blog </h1>
+        <div class="container p-0 main-content">
+            {% for post in posts %}
+            <div class="card my-2">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <svg class="bd-placeholder-img img-fluid rounded-start" width="100%" height="200"
+                            xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Image"
+                            preserveAspectRatio="xMidYMid slice" focusable="false">
+                            <title>Placeholder</title>
+                            <rect width="100%" height="100%" fill="#868e96"></rect><text x="50%" y="50%" fill="#dee2e6"
+                                dy=".3em" dx="-1em">Image</text>
+                        </svg>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a class="link-underline-light" href="{{ post.get_absolute_url }}">
+                                    {{ post.title }}
+                                </a>
+
+                                {% with post.tags.all as all_tags %}
                                 {% if all_tags.count > 0 %}
-                                    <p class="tags mt-2">Tags:
-                                        {% for tag in all_tags %}
-                                            <a class="badge rounded-pill bg-primary text-decoration-none" href="{% url 'blog:post_list_by_tag' tag.slug %}">{{ tag.name }}</a>
-                                        {% endfor %}
-                                    </p>
+                                <p class="tags mt-2">Tags:
+                                    {% for tag in all_tags %}
+                                    <a class="badge rounded-pill bg-primary text-decoration-none"
+                                        href="{% url 'blog:post_list_by_tag' tag.slug %}">{{ tag.name }}</a>
+                                    {% endfor %}
+                                </p>
                                 {% endif %}
-                            {% endwith %}
-                        </h5>
-                        <p class="card-text">
-                            {{ post.body|truncatewords:30|linebreaks }}
-                        </p>
-                        <p class="card-text"><small class="text-muted">
-                                Published: {{ post.publish }} by {{ post.author }}
-                            </small></p>
+                                {% endwith %}
+                            </h5>
+                            <p class="card-text">
+                                {{ post.body|truncatewords:30|linebreaks }}
+                            </p>
+                            <p class="card-text"><small class="text-muted">
+                                    Published: {{ post.publish }} by {{ post.author }}
+                                </small></p>
+                        </div>
                     </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
+        {% include "pagination.html" with page=page_obj %}
     </div>
-    {% include "pagination.html" with page=page_obj %}
+</div>
 {% endblock content %}

@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.utils import timezone
 from taggit.managers import TaggableManager
 
+
 class PublishedManager(models.Manager):
     def get_queryset(self) -> QuerySet:
         return super(PublishedManager, self).get_queryset().filter(status="published")
