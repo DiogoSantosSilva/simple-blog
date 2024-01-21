@@ -1,6 +1,8 @@
+from typing import Any
+from django.db.models.query import QuerySet
 from django.shortcuts import render, get_object_or_404
-from .models import Post, Comment
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from .models import Post
+from taggit.models import Tag
 from django.views.generic import ListView
 from .forms import EmailPostForm, CommentForm
 from django.core.mail import send_mail
@@ -10,6 +12,18 @@ class PostListView(ListView):
     context_object_name = "posts"
     paginate_by = 3
     template_name = "blog/post/list.html"
+
+    def get_queryset(self) -> QuerySet[Any]:
+        tag_slug = self.kwargs.get("tag_slug")
+        qs = super().get_queryset() 
+
+        if tag_slug:
+            tag = get_object_or_404(Tag, slug=tag_slug)
+            return qs.filter(tags__in=[tag])
+        return qs
+    
+
+
 
 
 def post_detail(request, year, month, day, post):

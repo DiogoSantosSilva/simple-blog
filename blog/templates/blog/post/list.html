@@ -20,9 +20,19 @@
                 <div class="col-md-8">
                     <div class="card-body">
                         <h5 class="card-title">
-                            <a href="{{ post.get_absolute_url }}">
+                            <a class="link-underline-light" href="{{ post.get_absolute_url }}">
                                 {{ post.title }}
                             </a>
+
+                            {% with post.tags.all as all_tags %}
+                                {% if all_tags.count > 0 %}
+                                    <p class="tags mt-2">Tags:
+                                        {% for tag in all_tags %}
+                                            <a class="badge rounded-pill bg-primary text-decoration-none" href="{% url 'blog:post_list_by_tag' tag.slug %}">{{ tag.name }}</a>
+                                        {% endfor %}
+                                    </p>
+                                {% endif %}
+                            {% endwith %}
                         </h5>
                         <p class="card-text">
                             {{ post.body|truncatewords:30|linebreaks }}
