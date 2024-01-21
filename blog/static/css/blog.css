@@ -1,0 +1,14 @@
+
+.main-content {
+    height: 50vh;
+    min-height: 80vh;
+}
+
+:root {
+    --color1: #cec6b8;
+    --color2: #072930;
+    --color3: #fdf8e7;
+    --color4: #f2b654;
+    --color5: #c47b38;
+    --color6: #7a796a;
+  }

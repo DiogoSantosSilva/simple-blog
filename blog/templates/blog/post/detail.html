@@ -1,4 +1,5 @@
 {% extends "blog/base.html" %}
+{% load crispy_forms_tags %}
 
 {% block title %}{{ post.title }}{% endblock title %}
 
@@ -8,4 +9,37 @@
         Published {{post.publish}} by {{post.author}}
     </p>
     {{ post.body|linebreaks }}
+    <p>
+        <a href="{% url 'blog:post_share' post.id %}">
+            Share this post
+        </a>
+    </p>
+    
+    {% with comments.count as total_comments %}
+        <h2>{{ total_comments }} comment{{ total_comments|pluralize }}</h2>
+    {% endwith %}
+
+    {% for comment in comments %}
+        <div class="comment">
+            <p class="info">
+                Comment {{ forloop.counter }} by {{ comment.name }}
+                {{ comment.created }}
+            </p>
+            {{ comment.body|linebreaks}}
+        </div>
+    {% empty %}
+        <p>There are no comments yet.</p>
+    {% endfor %}
+
+    {% if new_comment %}
+        <h2>Your comment hs been added.</h2>
+    {% else %}
+        <h2>Sdd a new Comment</h2>
+        <form method="post">
+            {{ comment_form|crispy }}
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Add comment</button>
+        </form>
+    {% endif %}
+
 {% endblock content %}
