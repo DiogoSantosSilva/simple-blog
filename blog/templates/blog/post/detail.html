@@ -1,61 +1,70 @@
 {% extends "blog/base.html" %}
+{% load blog_tags %}
 {% load crispy_forms_tags %}
 
 {% block title %}{{ post.title }}{% endblock title %}
 
 {% block content %}
-    <h1>{{post.title}}</h1>
-    <div class="row">
-        <div class="col-3">
-            <p class="date">
-                Published {{post.publish}} by {{post.author}}
-            </p>
-        </div>
-        <div class="col">
-            <p>
-                <a href="{% url 'blog:post_share' post.id %}">
-                    Share this post
-                </a>
-            </p>
-        </div>
-    </div>
-    {{ post.body|linebreaks }}
-
-    <hr>
-    <h2>Similar Posts</h2>
-    {% for post in similar_posts %}
-        <p>
-            <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+<h1>{{post.title}}</h1>
+<div class="row">
+    <div class="col-3">
+        <p class="date">
+            Published {{post.publish}} by {{post.author}}
         </p>
-    {% empty %}
-        There are no similar posts yet.
-    {% endfor %}
-    
-    <hr>
+    </div>
+    <div class="col">
+        {% with post.tags.all as all_tags %}
+        {% if all_tags.count > 0 %}
+        {% for tag in all_tags %}
+        <a class="badge rounded-pill bg-primary text-decoration-none"
+            href="{% url 'blog:post_list_by_tag' tag.slug %}">{{ tag.name }}</a>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
+</div>
+{{ post.body|markdown }}
+<p>
+    <a href="{% url 'blog:post_share' post.id %}">
+        Share this post
+    </a>
+</p>
 
-    {% with comments.count as total_comments %}
-        <h2>{{ total_comments }} comment{{ total_comments|pluralize }}</h2>
-    {% endwith %}
-    {% for comment in comments %}
-        <div class="comment">
-            <p class="info">
-                Comment {{ forloop.counter }} by {{ comment.name }}
-                {{ comment.created }}
-            </p>
-            {{ comment.body|linebreaks}}
-        </div>
-    {% empty %}
-        <p>There are no comments yet.</p>
-    {% endfor %}
-    {% if new_comment %}
-        <h2>Your comment hs been added.</h2>
-    {% else %}
-        <h2>Sdd a new Comment</h2>
-        <form method="post">
-            {{ comment_form|crispy }}
-            {% csrf_token %}
-            <button type="submit" class="btn btn-primary mb-4">Add comment</button>
-        </form>
-    {% endif %}
+<hr>
+<h2>Similar Posts</h2>
+{% for post in similar_posts %}
+<p>
+    <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+</p>
+{% empty %}
+There are no similar posts yet.
+{% endfor %}
+
+<hr>
+
+{% with comments.count as total_comments %}
+<h2>{{ total_comments }} comment{{ total_comments|pluralize }}</h2>
+{% endwith %}
+{% for comment in comments %}
+<div class="comment">
+    <p class="info">
+        Comment {{ forloop.counter }} by {{ comment.name }}
+        {{ comment.created }}
+    </p>
+    {{ comment.body|linebreaks}}
+</div>
+{% empty %}
+<p>There are no comments yet.</p>
+{% endfor %}
+{% if new_comment %}
+<h2>Your comment hs been added.</h2>
+{% else %}
+<h2>Sdd a new Comment</h2>
+<form method="post">
+    {{ comment_form|crispy }}
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary mb-4">Add comment</button>
+</form>
+{% endif %}
 
 {% endblock content %}
