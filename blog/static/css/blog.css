@@ -1,0 +1,27 @@
+
+:root {
+    --color1: #cec6b8;
+    --color2: #072930;
+    --color3: #fdf8e7;
+    --color4: #f2b654;
+    --color5: #c47b38;
+    --color6: #7a796a;
+}
+
+body {
+    background-color: var(--color3);
+}
+
+.bg-color {
+    background-color: var(--color4);
+}
+
+.main-content {
+    height: 60vh;
+    min-height: 75vh;
+}
+
+.profile {
+    background-color: var(--color4);
+    color: var(--color2)
+}
